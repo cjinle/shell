@@ -1,6 +1,5 @@
 # shell scripts
 
-* [shell教程](./base)
 * [if](./base/if.sh)
 * [for](./base/for.sh) / [for2](./base/for2.sh)
 * [case](./base/case.sh) / [select](./base/select.sh)
