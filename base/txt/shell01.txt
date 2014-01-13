@@ -1,42 +1,24 @@
 --
-
 第1天：判断
 第2天：循环
 第3天：选择结构，函数
 第4天：awk
 第5天：sed
 
-
-
-
 shell  
-
 	基本来说就是一组命令，按照顺序执行。  它是解释型的，意味着它不需要编译，所以shell是需要声明类型的。
-
-
-
-
 	命令 ＋ 固定格式 ＋ 基本语法 ＝ shell
-
 
 执行脚本
 ./xxx.sh      --要求有执行权限，并且一定要声明shell类型（#!/bin/bash)
-
 sh xxx.sh     --不需要有执行权限，也可以不声明shell类型
-
 sh -x xxx.sh   --可以显示执行过程，帮助排错
 
-
-
-
 bash  补充和回顾
-
 命令解释器    处于内核与用户之间
-
 man type   内部命令  大概50多个
 
 bash的特性
-
 命令自动补全	--多用tab键
 命令的历史记录		
 	history 	 
@@ -50,15 +32,10 @@ bash的特性
 重定向
 shell编程
 
-
 /etc/profile
 /etc/bashrc		--这两个是全局的，针对所有用户
-
 ~/.bashrc		
 ~/.profile		--这两个是放在每个用户的家目录里，只针对它对应的用户
-
-
-
 
 变量：
 	变量的用途：
@@ -66,19 +43,14 @@ shell编程
 	2，常用于脚本里，对经常使用的值使用变量，以免每次都要写这个值，使用变量就比较灵活
 
 环境变量		--就是可以让子bash引用的变量
-
 	env  --此命令可以查看环境变量 
-
 	set --除了显示环境变量之外，还会显示其他的一些自定义变量
-
-
 	PS1='[\u@\h \W]\$ '	--默认值
 		\t	24小时格式时间
 		\H	完整的主机名
 		\v	bash版本信息
 
 	locale	--语言有关的变量
-
 [root@li www]# locale
 LANG=zh_CN.UTF-8			--主语言的环境
 LC_CTYPE="zh_CN.UTF-8"
@@ -95,18 +67,12 @@ LC_MEASUREMENT="zh_CN.UTF-8"
 LC_IDENTIFICATION="zh_CN.UTF-8"
 LC_ALL=			--语言环境的整体设置
 
+vim /etc/sysconfig/i18n 
 
-			vim /etc/sysconfig/i18n 
-
-	[root@li ~]# export LANG=en
-	[root@li ~]# export LANG=zh		--用时候直接用此命令设置临时的语言支持
-
-
-
+[root@li ~]# export LANG=en
+[root@li ~]# export LANG=zh		--用时候直接用此命令设置临时的语言支持
 
 利用export把自定义变量转化为环境变量
-
-
 [root@dns ~]# a=1
 [root@dns ~]# env |grep a=1
 [root@dns ~]# set |grep a=1
@@ -115,13 +81,9 @@ a=1
 [root@dns ~]# env |grep a=1
 a=1
 
-
-
-
 [root@li www]# a=1
 [root@li www]# bash		--进入到子bash
 [root@li www]# echo $a	--子bash里看不到此变量值
-
 [root@li www]# exit		--退到父bash
 exit
 [root@li www]# export a=1	--使用export命令转化为环境变量
@@ -130,31 +92,22 @@ exit
 1					--再在子bash里可以看到此变量值
 
 
-
 变量的定义
 [root@li ~]# a=3
 [root@li ~]# echo $a
 3
-
-
 declare 或 typeset 		定义变量 
-
-
 [root@li ~]# b=3+3
 [root@li ~]# echo $b
 3+3
 
-	declare	
-
+declare	
 [root@li ~]# declare -i c=3+3
 [root@li ~]# echo $c
 6
 
-
-
-	变量定义的规则：
-
-	1，区分大小写，同名称但大小写不同的变量名是不同的变量 
+变量定义的规则：
+1，区分大小写，同名称但大小写不同的变量名是不同的变量 
 [root@li www]# a=2
 [root@li www]# A=3
 [root@li www]# echo $a
@@ -162,17 +115,17 @@ declare 或 typeset 		定义变量
 [root@li www]# echo $A
 3
 
-	2，定义时的格式要注意，等号两边不能有空格，对于有空格的字符串做为赋值时，要用引号引起来
- B="hello world"
- B='hello world haha'	--单引号和双引号在这里都可以，后赋值的会覆盖前面的赋值
-	--在脚本里注意引号的相互嵌套，要成对出现
-	3，单引号与双引号的区别，单引号内的变量或者特殊字符仅为一般字符，但双引号内的变量或者特殊字符可以保持它的变量特性
+2，定义时的格式要注意，等号两边不能有空格，对于有空格的字符串做为赋值时，要用引号引起来
+B="hello world"
+B='hello world haha'	--单引号和双引号在这里都可以，后赋值的会覆盖前面的赋值
+ --在脚本里注意引号的相互嵌套，要成对出现
+3，单引号与双引号的区别，单引号内的变量或者特殊字符仅为一般字符，但双引号内的变量或者特殊字符可以保持它的变量特性
 [root@li ~]# echo '$B'
 $B
 [root@li ~]# echo "$B"
 hello world haha
 
-	4，变量名可以是字母或数字或下划线，但是不能以数字开头
+4，变量名可以是字母或数字或下划线，但是不能以数字开头
 [root@li ~]# c123=aaa
 [root@li ~]# echo $c123
 aaa
@@ -183,22 +136,19 @@ bash: 123c=aaa: command not found
 [root@li ~]# echo $_abc11122
 3
 
-
-	5，变量赋值可以有多个    例如  echo $PATH ，以":"分隔
-	6，变量的获取方式：	$变量名     ${变量名}	
+5，变量赋值可以有多个    例如  echo $PATH ，以":"分隔
+6，变量的获取方式：	$变量名     ${变量名}	
 [root@li ~]# echo $a
 3
 [root@li ~]# echo ${a}
 3
-	7，取消变量的命令     unset  变量名
+7，取消变量的命令     unset  变量名
 [root@li ~]# unset a
 [root@li ~]# echo $a
-	
+8，别的变量定义方式
 
-	8，别的变量定义方式
-		 rpm -qf `which mount`
-		 ls /lib/modules/`uname -r`/	--执行符号的使用，执行符号是tab键上面的那个符号
-
+rpm -qf `which mount`
+ls /lib/modules/`uname -r`/	--执行符号的使用，执行符号是tab键上面的那个符号
 
 [root@li /]# a=`which mount`		--这样定义
 [root@li /]# echo $a
@@ -208,48 +158,31 @@ bash: 123c=aaa: command not found
 [root@li /]# echo $a
 2.6.18-164.el5
 
-
 练习：求现在到1970年相隔多少天
 # echo $[`date +%s`/86400]
 # echo $(($(date +%s)/86400))
 
-
 $( )   等同于   执行符号  `  `,但是如果要嵌套使用，使用` `符号就不行，要用$()
-
 
 [root@dns shell01]# a=$(rpm -qf `which mount`)
 [root@dns shell01]# echo $a
 util-linux-2.13-0.52.el5
 
-
 [root@dns shell01]# a=$(rpm -ql $(rpm -qf `which mount`) |grep /bin/mount)
 [root@dns shell01]# echo $a
 /bin/mount
 
-
 $(( ))   等同于  $[ ]  --这两个是运算符号
-
 
 [root@li /]# read a		--用read的方式定义变量，主要用于让用户去定义变量值
 lalalalalaaalal
 [root@li /]# echo $a
 lalalalalaaalal
 
-
-
 练习：要求用户来输入它的用户名和密码，并打印出来（输入时密码不可见，输入用户名的时间为10秒)
-
-
-
-
-
 
 练习：写一个脚本，每天凌晨0点01分mv /var/log/aaa.log,备份到/backup/年/月/年-月-日期.aaa.log，然后再touch /var/log/aaa.log,要求用变量的形式
 --如果是每天的晚上23点59分做，又应该如何改，要注意哪些情况？
-
-
-
-
 
 引申一个小的面试题：
 	
@@ -257,19 +190,12 @@ lalalalalaaalal
 	如果mv access.log  access.log.bak后，并没有重启服务,再touch一个access.log
 	请问：新的请求信息，是写到哪个文件?
 
-
 答案：不重启服务，还是写到access.log.bak里，因为inode不变
      重启服务后，就会写到access.log里
 
-
 所以上面的脚本在实际情况，最后一步touch 要改成服务reload，或者是kill -USR1  `cat /服务的pid文件`
-	
-
 
 练习：一个普通用户在tty文本模式骗取root密码的脚本
-
-
-
 
 练习：实现用户登出时，提示它登录一共的时间
 
@@ -279,28 +205,16 @@ test,你一共登录了0时,0分,8秒 Bye @_@
 提示计算格式：
 a=$[$a-$b]
 
-
-
-
-
 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 
---------------------------------------
-
 echo $$返回程序的PID 	
-
 echo $0		#代表脚本本身名
 echo $1         #代表脚本运行时接的第一个参数
 echo $2         #代表脚本运行时接的第二个参数
 echo $3         #代表脚本运行时接的第三个参数
-
-
 echo $$         #程序运行的PID
-
 echo $*         #代表所有参数
 echo $@         #也是代表所有参数
-
-
 echo $?	执行成功则返回0
 失败则返回非0
 
@@ -313,17 +227,12 @@ echo $?	执行成功则返回0
 16	usage or syntax error
 128	shared library error
 
-
 -----------------------------------------------------------------
 
 重定向
-
 1，标准输入(stdin)；代码为0，使用<  或者  <<	--默认设备就是键盘
 2，标准输出(stdout);代码为1，使用>  或者 >>	或1 > 或 1 >>--默认设备是屏幕
 3, 错误输出(stderr);代码为2，使用 2> 或者 2>>   --默认设备也是屏幕
-
-
-
 
 标准输入 -->		命令		-->标准输出--->  设备／文件			
 			  |
@@ -339,34 +248,22 @@ find: /home/user1: 权限不够
 find: /home/std5: 权限不够
 find: /home/aa: 权限不够	--这些是错误输出
 
-
 [a@li ~]$ find /home/  -name user1 > /home/a/right.txt 2> /home/a/wrong.txt	--这样把标准输出输到/home/a/right.txt文件，把错误输出输到/home/a/wrong.txt文件，屏幕上就不显示任何信息了
-
 把标准输出和错误输出输到同一个文件：
 [a@li ~]$ find /home/  -name user1 > /home/a/union.txt 2> /home/a/union.txt
-
 [a@li ~]$ find /home/  -name user1 > /home/a/union2.txt 2>&1
-
 [a@li ~]$ find /home/  -name a > /dev/null 2>&1		--/dev/null是脚本里经常要用到的一个设备，类似于黑洞，或者叫垃圾桶，也就是信息没了
 
-
-		双向重定向：tee
+双向重定向：tee
 如果想要又要传给设备或者文件，又要显示到屏幕可以用此命令
 
 [root@li shell01]# last |tee /root/last.txt --这样就是又把last显示的信息传到了/root/last.txt文件里，又显示到了屏幕
-
-
-
 [root@li shell01]# cat > /root/cat3.txt <<EOF
 > sdfsafsafsa
 > sfwewqrwq
 EOF
 
-
-
-
 #!/bin/bash
-
 #注意下面这两种区别
 cat > /tmp/abc <<EOF
 你好
@@ -382,23 +279,16 @@ hello
 呵呵
 EOF
 
-
-
 # yum install mysqld* 
 # /etc/init.d/mysqld restart
 # mysql
 
-
 #!/bin/bash
-
 mysql -p123 <<ABC
 show databases;
 ABC
 
-
-
 练习：自动ftp下载我的笔记
-
 
 #!/bin/bash
 lftp 10.1.1.35 -u ule,123 <<EOF
@@ -409,25 +299,17 @@ quit
 EOF
 
 -----------------------------------------------------
-
 管道：
 
 grep   cut  
 
-
-
-
-
 [root@li shell01]# last |tee /root/last.txt |cut -d " " -f 1
-
 cut命令  -d "分隔符" -f 第几列
-
 
 [root@li shell01]# ifconfig eth0 |grep Bcast |cut -d " " -f2	--发现这样截取，没有值，因为这里的是多空格，而-d " "指的是单空格，所以要换一种写法
 
 [root@li shell]# ifconfig eth0 |grep Mask |cut -d " " -f12 |cut -d ":" -f2
 10.1.1.35
-
 
 [root@li shell01]# ifconfig eth0 |grep Bcast |cut -d ":" -f2 |cut -d " " -f1	--可以这样截取
 10.1.1.35
@@ -435,13 +317,8 @@ cut命令  -d "分隔符" -f 第几列
 
 --cut多用于截取日志，但对于多空格的情况下就不太好用了，就要借助于其它工具（AWK）
 
-
 # echo 123 | cut -c 2
 2
-
-
-
-
 
 排序统计相关的：wc    sort    uniq
 
@@ -463,13 +340,11 @@ wc
 sort   排序命令
 [root@li shell01]# cat /etc/passwd |sort	--默认以开头字母排序
 
-
 -r 反向排序
 -n 以数字来排
 -f 大小写不敏感
 -t 分隔符
 -k 接数字代表第几列
-
 
 [root@li ~]# cut -d  -f
 [root@li ~]# sort -t -k
@@ -493,8 +368,6 @@ uniq	唯一命令
 /bin/bash
 --在管道用得多的情况下，命令的顺序会造成很大的结果不同
 
-
-
 练习：
 [root@li ~]# cat 123	--计算此文件里有多少个f
 sfsadfsaf
@@ -504,10 +377,7 @@ sdfdsdsf
 [root@li ~]# grep -o f 123 |wc -l
 7
 
-
-
 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-
 
 命令执行的判断顺序：
 ;
@@ -517,11 +387,8 @@ sdfdsdsf
 [root@li shell01]# ./configure ; make ;make install	--执行完前面，再执行后面	
 [root@li shell01]# ./configure && make && make install	--前面执行成功，再执行后面的
 
-
-
 [root@li shell01]# ls /test/ && touch /test/abc	--这是代表前面执行成功则touch /test/abc
 [root@li shell01]# ls /test/ || touch /test/abcd --与&&符号相反，前面执行失败才touch /test/abcd
-
 
 当&&与||混用进行条件判断时，要注意逻辑上不要搞混
 要先&&再||
@@ -539,10 +406,7 @@ ls: /testfsdafas/: 没有那个文件或目录
 existed
 not existed
 	
-
-
 ===========================================================
-
 
 条件判断：
 
@@ -570,13 +434,8 @@ else
         command
 fi
 
-
-
-
 man test去查看，很多的参数都用来进行条件判断
-
 与文件存在与否的判断
-
 -e	是否存在
 -f	是否为文件
 -d	是否为目录
@@ -588,7 +447,6 @@ man test去查看，很多的参数都用来进行条件判断
 
 
 文件权限相关的判断
-
 -r	是否可读
 -w
 -x
@@ -597,14 +455,10 @@ man test去查看，很多的参数都用来进行条件判断
 -k	是否有t位
 -s     是否为空白文件
 
-
-
 两个文件的比较判断
-
 -nt	比较file1是否比file2新	
 -ot	比较file1是否比file2旧
 -ef	比较是否为同一个文件，或者用于判断硬连接，是否指向同一个inode
-
 
 整数之间的判断
 -eq	相等
@@ -614,42 +468,21 @@ man test去查看，很多的参数都用来进行条件判断
 -ge   大于等于
 -le	小于等于	
 
-
-
 字符串之间的判断
-
 -z  	是否为空字符串
 -n	是否为非空字符串
 string1 = string2 是否相等
 string1 != string2 不等
 
-
 多重条件判断
 -a      两个条件同时满足，才为true
 -o      两者满足其一，就为true
 
-
-
-
-
 练习：read输入一个文件，判断当前用户对它的读写执行权限
-
-
-
-
 
 练习：如oracle用户，拷贝一个备份文件（自已建立一个oracle，并创建一个小文件模拟备份文件就可以）到一个目录下（目录用read命令来让用户输入),实现拷贝备份前的判断
 
-
-
-
-
-
 练习: 判断一个文件是否为死链接
-
-
-
-
 
 练习：使用read让用户输入它的名字，性别（对性别进行判断），年龄（判断是否有18岁成年)
 
@@ -659,25 +492,12 @@ string1 != string2 不等
 	    王五  女   15   ，则最后echo出 "王五小姐，你好!"
 	    王五  女   20   ，则最后echo出 "王五女士，你好!"
 
-
-
-
-
-
 练习：如果你是尚观老师，新班学员想要使用ntfs挂载，还要实现vnc看桌面（但并没有vncviewer这个包）。自己已经有了vsftp的yum仓库，也把ntfs相关的软件包已经用nfs共享了；请写一个脚本给他们自动运行，自动安装
-
-
-
-
-
-
-
 
 题目：
 1。把笔记目录里的09log目录里的29号的日志做成下面类似下统计格式
 
 统计29号访问我的shell01的次数
-
 
 --以次数排序
       2 2.2.2.233
@@ -687,7 +507,6 @@ string1 != string2 不等
      10 2.2.2.101
      ............		
 
-
 --以IP最后一位大小排序
       6 2.2.2.2
      31 2.2.2.81
@@ -696,37 +515,15 @@ string1 != string2 不等
       5 2.2.2.141
     ................	
 
-
-
-
 2，用read输入一个IP，判断是否能ping通这个IP
-
-
 
 3，使用脚本实现对/var/log/ccc.log的日志轮转功能（也就是ccc.log.4没有了，ccc.log.3成了ccc.log.4,.........ccc.log成了ccc.log.1,再创建一个新的ccc.log)，要求最多保留4个副本，每个星期一的凌晨0点01分自动运行
 
-
-
-
-
 4，假如我现在要写一个自动安装软件的脚本，默认安装到根目录下，如果安装此软件最少需要3G大小，请写一个判断根目录空间是否足够安装的脚本
-
-
-
-
-
 
 5，写两个监控apache是否存活的脚本
 一个为服务器监控：表示脚本是跑在apache服务器上
 一个为客户端监控：表示脚本是跑在另一台机器上(提示:wget一个小文件，判断返回值)
-
-
-
-
-
-
-
-
 
 6.比如:35上的samba服务器共享/test目录，共享名也为test;    
 如果此目录里是每天备份的日志文件打包，格式为类似20110329.log.tar的形式
