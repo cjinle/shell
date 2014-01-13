@@ -2,5 +2,7 @@
 
 
 * v1.0
-[link](/del.pyc.sh)
+
+[link](/del_pyc.sh)
+
 ------
