@@ -12,8 +12,8 @@
 * [expect](./base/expect.sh) / [expect_file](./base/ssh.exp)
 
 ### wiki 
-* [shell01](./base/shell01.txt)
-* [shell02](./base/shell02.txt)
-* [shell03](./base/shell03.txt)
-* [shell04](./base/shell04.txt)
-* [shell05](./base/shell05.txt)
+* [shell01](./base/txt/shell01.txt)
+* [shell02](./base/txt/shell02.txt)
+* [shell03](./base/txt/shell03.txt)
+* [shell04](./base/txt/shell04.txt)
+* [shell05](./base/txt/shell05.txt)
