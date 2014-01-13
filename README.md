@@ -2,7 +2,7 @@
 
 
 * v1.0
-
-[link](/del_pyc.sh)
-
 ------
+
+### 指引
+* [shell教程](./base)
