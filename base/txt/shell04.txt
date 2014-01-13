@@ -1,8 +1,5 @@
 --
-
-
 =============================================
-
 
 正则表达式
 
@@ -18,8 +15,6 @@ a+	匹配至少一个或多个a
 a*	匹配0或多个a
 a?	匹配0或1个a
 
-
-
 大写 [[:upper:]]  [A－Z]
 小写 [[:lower:]]  [a-z]
 字母 [[:alpha:]] [a-Z]	
@@ -28,38 +23,23 @@ a?	匹配0或1个a
 纯数字 [[:digit:]] [0-9]
 标点符号 [[:punct:]]
 
-
 ========================================================
-
-
 
 显示查出的行在原文件的行号加n参数	grep -n root /etc/passwd		
 反向查找加v参数  grep -v bin /etc/passwd
 大小写不敏感加i参数  grep -ni root grep.txt 
-
-
-
 查找出有rot或者是rat的行 grep -n r[oa]t grep.txt --注意的是，［ ］括号内不论几个字符，都是选一个
-
 查找一个非r字符加oot连在一起的行 grep  '[^r]oot' grep.txt
-
 查找不以小写字母开头  grep  '[^a-z]oo' grep.txt 	
-
 --记住： [] 里的^为取反   ，外面的为以它开头
 
-
 查找非全部为小写字母的字符串行  grep [^a-z] grep.txt 
-
-
-
 [root@dns shell03]# grep  '^[a-z]oot' grep.txt 
 root
 boot
 [root@dns shell03]# grep  '[^a-z]oot' grep.txt   --表示有一个非小写字符连着oot的就会被找出来
 Root
 Boot
-
-
 
 [root@li test]# cat test 
 root
@@ -80,58 +60,38 @@ root
 rot
 boot
 
-
-
 查找不以大写字母开头   grep '[^[:upper:]]' grep.txt 
 			grep  '^[^A-Z]' grep.txt 
-
 
 查找有数字的号   grep '[0-9]' grep.txt 
 		或者 grep [[:digit:]] grep.txt 
 
-
 查找一个数字和一个字母连起来的行
-
 			grep '[0-9][a-Z]' grep.txt 
 
 行首^    行尾$
-
 查找不以r开头的   grep -v ^r grep.txt 
-
-
 
 查找以数字开头的   grep ^[0-9]  grep.txt 
 		grep ^[[:digit:]] grep.txt 
 
-
 查找以大写字母开头的 grep ^[A-Z] grep.txt 或者 grep ^[[:upper:]] grep.txt 
 查找以小写字母开头的 grep ^[a-z] grep.txt 或者 grep ^[[:lower:]] grep.txt 
-
 查找以点结束的   grep "\."$ grep.txt 	--注意要引起来，而且要转义
-
-
 去掉空格行    cat  grep.txt  |grep -v ^$	--以^$表示空格行
-
-
 查找完全匹配abc的		grep  ^abc$	grep.txt
-
-
 查找a用户在/etc/passwd里的行
 # grep ^a: /etc/passwd
 a:x:567:567::/home/a:/bin/bash
 
-
 查找一行内只有三个字符长的行
 grep ^...$ grep.txt 
 
-
 －－－－－－－－－－－－－－－－－－－－－－－－－－－－－
-
 
 .  点号代表一个任意字符
 *  代表零个或者多个前字符
 .*  代表0个或多个任意字符
-
 
 [root@li test]# cat grep.txt 
 ggle
@@ -144,7 +104,6 @@ gaaagle
 abcgef
 abcdef
 
-
 比较：
 grep 'g.g' grep.txt 	--只要两个g字母中间有一个任意字符就可以
 grep 'g*g' grep.txt	--只要有一个g字母就可以。等同于grep g grep.txt
@@ -152,60 +111,36 @@ grep 'go*g' grep.txt    --只要两个g字母中间有零个o或多个o就可以
 grep 'g.*g' grep.txt	--只要两个g字母中间有零个或任意个字符就可以
 grep 'go.*g' grep.txt 	--只要go与g字母中间有零个或任意个字符就可以
 
-
-
 查找每行里第四个字符为t的行
 grep ^...t /etc/passwd
-
-
 
 查找每行里倒数第六个字符为o的行
 grep o.....$ /etc/passwd
 
-
-
 查找每行里有s和n字符，并且中间有两个字符的行
 grep s..n /etc/passwd
-
-
 
 查找uid为4的行（只使用grep和正则表达式，不使用cut或awk的截取)
 grep x:4: /etc/passwd
 grep .*:.:4:.*:.*:.*:.* /etc/passwd
 
-
 查找uid里包括4的行
 grep .*:.:.*4.*:.*:.*:.*:.* /etc/passwd
-
 
 查找/etc/passwd里注释列为空的行
 grep .*:.*:.*:.*::.*:.* /etc/passwd
 
-
-
 查找/etc/passwd里注释列不为空的行
-
 grep -v .*:.*:.*:.*::.*:.* /etc/passwd
-
 grep .*:.*:.*:.*:..*:.*:.* /etc/passwd
 
-
-
 查找不能在登录界面用密码正常登录的用户（这里除开其它影响因素，只指/etc/shadow里第二列不为x或!开头的，也就是第二列要有密码串才可以登录)
-
- grep .*:[!x].*:.*:.*:.*:.*:.*:.*:.* /etc/shadow
-
-
-
+grep .*:[!x].*:.*:.*:.*:.*:.*:.*:.* /etc/shadow
 
 ========================================================
 
-
- gawk  -  pattern scanning and processing
+gawk  -  pattern scanning and processing
        language
-
-
-
 awk
 
 调用有三种方式：
@@ -215,28 +150,21 @@ awk
 3，是将所有的awk命令插入一个单独文件，然后调用
   awk -f awk-script-file  filename
 
-
 字段的引用
 ＄ 字段操作符
 $1代表第一列，$2代表第二列。。。n以此类推
 $0代表整个输入记录
-
 
 比较：
 cut -d" "  -f1
 sort -t" " -k1
 awk -F" " '{print $1}'
 
-
-
 比较用cut和awk截取IP
 ifconfig eth0 |grep Bcast |cut -d ":" -f2|cut -d" " -f1
-
 ifconfig eth0 |grep Bcast |awk -F: '{print $2}'|awk  '{print $1}'
-
 ifconfig eth0 |grep Bcast | awk -F" " '{print $2}'|awk -F":" '{print $2}'
 --awk默认以N个空格为分隔符
-
 
 打印所有行    awk '{print $0}' /etc/passwd
 打印第一列	 awk -F: '{print $1}' /etc/passwd
@@ -244,20 +172,14 @@ ifconfig eth0 |grep Bcast | awk -F" " '{print $2}'|awk -F":" '{print $2}'
 [root@li test]# awk -F":" '{print $1" 的uid是 "$3}' /etc/passwd
 [root@dns ~]# awk -F":" '{print $1"的uid是"$3",登录shell 是 "$7}' /etc/passwd
 
-
-
 $n    n不一定要用整数，也可以用变量值代替
 echo a b c |awk 'BEGIN {one=1;two=2} {print $(one+two)}'
 
-
 awk  -F:  ‘BEGIN {处理文件前执行的代码块} ｛处理文件过程中执行的代码块} END {处理文件后执行的代码块}'   filename
-
-
 BEGIN	｛
 
-
 ｝
-	｛
+｛
 
 
 ｝
@@ -265,16 +187,12 @@ END	｛
 
 ｝
 
-
-
 [root@dns ~]# awk -F: 'BEGIN {print "这是第一行"} {print $0} END {print "这是最后一行"}' /etc/passwd 
 这是第一行
-
 
 比较下面这两句
 awk -F: '{print "用户名\t\tUID"}{print $1"\t"$3}' /etc/passwd
 awk -F: 'BEGIN{print "用户名\t\tUID"}{print $1"\t"$3}' /etc/passwd
-
 
 用awk打印表格
 
@@ -284,7 +202,6 @@ awk -F: 'BEGIN{print "用户名\t\tUID"}{print $1"\t"$3}' /etc/passwd
 第二行
 第三行
 第四行
-
 
 [root@li ~]# head -1 /etc/passwd  |awk -F: 'BEGIN {print "*************"} {print "*   "$1"    *"}{print "*   "$2"    *"}{print "*    "$3"   *"}{print "*    "$4"    *"}{print "*    "$5"    *"}{print "*    "$6"    *"}{print "*    "$7"    *"} END  {print "*************"}' 
 
@@ -299,7 +216,6 @@ awk -F: 'BEGIN{print "用户名\t\tUID"}{print $1"\t"$3}' /etc/passwd
 *************
 --结果的对齐方面可以自己再去调整
 
-
 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 
 --awk  内置变量
@@ -309,23 +225,16 @@ NF   代表字段数
 $NF  代表最后一个字段数
 NR   代表当前处理第几行
 
-
-
 练习：用netstat -ntl 截取所有开放的端口号
 
-
- netstat -ntl |grep -v Active| grep -v Proto|awk '{print $4}'|awk -F: '{print $NF}'
-
+netstat -ntl |grep -v Active| grep -v Proto|awk '{print $4}'|awk -F: '{print $NF}'
 netstat -ntlup |grep -Ev "Active|Proto" |awk '{print $4}' |awk -F: '{print $NF}'
-
 
 grep增强模式
 查找/etc/passwd里包含root或daemon的行
 cat /etc/passwd |grep -E "(root|daemon)"
 查找/etc/passwd里包含root或daemon或adm的行
 cat /etc/passwd |egrep "(root|adm|daemon)"
-
-
 
 练习：
 cat 1.txt
@@ -336,7 +245,6 @@ cat 2.txt
 a	b	c
 a	b	c
 
-
 要求得到结果
 2	a	c
 2	a	c
@@ -344,7 +252,6 @@ a	b	c
 [root@li ~]# paste 1.txt 2.txt |awk '{print $2"\t"$4"\t"$6}'
 2       a       c
 2       a       c
-
 
 awk关系操作符
 ==   等于
@@ -359,12 +266,9 @@ awk逻辑操作符
 | |	逻辑或
 ！	非
 
-
 awk运算操作符
 + - * / %
 ^  幂   比如：2的三次方  2^3   --/bin/bash里面求幂为2**3
-
-
 
 打印第五行
 head -5 /etc/passwd |tail -1
@@ -373,66 +277,33 @@ awk 'NR==5 {print $0}' /etc/passwd
 head -5 /etc/passwd |tail -1 |cut -d":" -f5
 awk -F":" 'NR==5 {print $5}' /etc/passwd
 
-
 打印每一行的最后一列
-
 打印第五行
-
 打印每行的字段数
-
 打印第五行的字段数
-
 打印最后一行
-
 打印最后一行的最后一列
-
 打印前五行
-
 打印五到十行，并在前面加上行号
-
 打印奇数行 (删除偶数行)
-
 打印偶数行 (删除奇数行)
-
 删除五分之一的行（打印其五分之四的行，要求这五分之一的行号间隔平均)
-
 打印/etc/passwd里普通用户的行
-
 打印字段数大于6的行
-
-
-
-
 
 打印所有的列数的总和
 --提示：awk是由上往下一行一行的扫描，类似写shell脚本时的循环语句，在这里是自动循环
 --思路：先定义一个变量值为0，每扫一行，就加上那一行的列数(NF),最后打印出结果
 
-
-
-
-
 打印列数大于5的总行数
 # awk -F: 'BEGIN {i=0} {NF>5; i=i+1} END {print i}' /etc/passwd
 # awk -F: 'BEGIN {i=0} {if (NF>5) i=i+1} END {print i}' /etc/passwd
-
-
-
 
 综合运算  echo |awk '{print 10^2+(90-80)}'
 
 也可以进行浮点数运算 echo |awk '{print 10.9^2+(90.5-80.2)/3}'
 
-
-
-
-
 例1：监控磁盘使用率，高于80%的找出来，输出警告，发送邮件给管理员
-
-
-
-
-
 
 例2：计算swap总量，使用量，剩余量，使用百分比，剩余百分比 
 
@@ -446,11 +317,7 @@ xxxxx	xxxx	xxxx	xxx%	xxx%
 第二行
 第三行
 
-
-
-
 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-
 
 --awk外部脚本
 
@@ -467,7 +334,6 @@ END {
 
 例 ：把 awk -F: '{print $1}' /etc/passwd 改成写外部脚本的形式
 
-
 BEGIN {
         FS=":"
 }
@@ -477,10 +343,8 @@ BEGIN {
 
 # awk -f 1.awk /etc/passwd	
 
-
 例：  打印字段数大于5的总行数  （用脚本写）
 awk -F: 'BEGIN {c=0} {if (NF>5) {c=c+1}} END {print c}' /etc/passwd
-
 
 BEGIN {
      FS=":"
@@ -518,15 +382,10 @@ END     {
         print "平均大小为:"c/NR
 }
 
-
-
 [root@li shell04]# ll -S ../shell03/ |awk -f 3.awk 
 最大文件为:shell03.txt  其大小为:7637
 最小文件为:8.sh 其大小为:205
 平均大小为:1893.17
-
-
-
 
 ====================================================
 
@@ -545,8 +404,6 @@ hello world[root@li shell04]#
 printf {format_expression[,argument]}
 两个主要的格式说明符是s和d,s代表字符串，d表示十进制整数
 
-
-
 [root@li shell04]# ls -l|grep -v 总计|awk '{printf ("%d%s",$5,$NF)}'
 32awk01.awk23awk02.awk21awk03.awk32awk04.awk72awk05.awk175awk06.awk7421shell04.txt7338shell04.txt~[root@li shell04]# 
 
@@ -560,7 +417,6 @@ printf {format_expression[,argument]}
 7610    shell04.txt
 7473    shell04.txt~
 
-
 [root@dns shell04]# ls -l|grep -v total |awk '{printf ("%s 的大小为 %d\n",$NF,$5)}'
 123 的大小为 22510
 1.awk 的大小为 94
@@ -570,9 +426,6 @@ printf {format_expression[,argument]}
 china 的大小为 748395
 shell04.txt 的大小为 8179
 shell04.txt~ 的大小为 8125
-
-
-
 
 例：倒序排序所有字段（/etc/passwd)
 
@@ -597,8 +450,6 @@ END {
  awk -f awk07.awk /etc/passwd
 可以看到结果倒序排列
 
-
-
 -------------------------------
 
 --awk字符匹配
@@ -618,10 +469,6 @@ awk -F: '$1~/oo/ {print $0}' /etc/passwd
 awk -F: '$1!="oo" {print $0}' /etc/passwd
 awk -F: '$1!~"oo" {print $0}' /etc/passwd
 
-
-
-
-
 例：统计/etc/passwd里以/sbin/nologin结束的用户名，把用户名打印出来，并统计个数
 
 [root@dns shell04]# cat /etc/passwd |awk -F: 'BEGIN {a=0} { if ($7=="/sbin/nologin") {printf ("%s\t",$1);a=a+1} } END {print "\n\n总个数为:"a}'
@@ -629,21 +476,12 @@ bin     daemon  adm     lp      mail    uucp    operator games    gopher  ftp   
 
 总个数为:33
 
-
-
-
-
 例：利用awk把不允许登录的账号名打印出来（指第七列不是以/bin/bash结束的列)，并统计个数
-
 
 [root@dns shell04]# cat /etc/passwd |awk -F: 'BEGIN {a=0} { if ($7!="/bin/bash") {printf ("%s\t",$1);a=a+1} } END {print "\n\n总个数为:"a}'
 bin     daemon  adm     lp      sync    shutdown        halt       mail    news    uucp    operator        games   gopher     ftp     nobody  nscd    vcsa    rpc     mailnull  smmsp    ntp     oprofile        pcap    dbus    avahi   xfsrpcuser nfsnobody       sshd    haldaemon       gdm     avahi-autoipd      sabayon apache  named   cacti   postfix
 
 总个数为:37
-
-
-
-
 
 --awk的字符串函数
 
@@ -667,14 +505,9 @@ awk -F: '{print tolower(toupper($1))}' /etc/passwd
 substr  截取函数
 awk -F: '{print substr($1,1,2)}' /etc/passwd
 
-
-
-
 替换函数
 sub  单替换
 gsub  全替换
-
-
 
 [root@li shell04]# awk -F: 'NR==1 {sub(/o/,"O",$0);print $0}' /etc/passwd 
 rOot:x:0:0:root:/root:/bin/bash
@@ -682,21 +515,9 @@ rOot:x:0:0:root:/root:/bin/bash
 [root@li shell04]# awk -F: 'NR==1 {gsub(/o/,"O",$0);print $0}' /etc/passwd 
 rOOt:x:0:0:rOOt:/rOOt:/bin/bash
 
-
 [root@dns shell04]# awk -F: 'NR==1 {gsub(/\/bin\/bash/,"/sbin/nologin",$0);print $0}' /etc/passwd 
 root:x:0:0:root:/root:/sbin/nologin
 
-
-
-
-
-
 题目：监控CPU 15分钟内的平均负载，如果超过5则发警告邮件给管理员
-
-
-
-
-
-
 
 

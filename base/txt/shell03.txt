@@ -1,8 +1,6 @@
 --
 
-
 菜单   case    select 
-
 
 从/etc/init.d/httpd里拷的一段
 case "$1" in
@@ -25,8 +23,6 @@ case "$1" in
         exit 1
 esac
 
-
-
 case  "chioce" in
 	"var1" )
 		command
@@ -45,49 +41,18 @@ esac
 
 例一：输入一个键，判断是大写字母还是小写字母，还是数字，还是其它
 
-
-
-
-
-
-
-
 例二:改写第一天的判断脚本
 使用read让用户输入它的名字，性别（对性别进行判断），年龄（判断是否有18岁成年)
 
-
-
-
-
-
-
-
-
-
 例三：交互输入一个人名，选择性别，或者姓名，显示相应的人的资料(把选择项写成菜单的形式)
-
-
-
-
-
-
-
 
 例四：改写上一个题目，在case里面再嵌套case菜单，使之选项更丰富
 
-
-
-
-
-
-
 ------------------------------------------------------------------
-
 
 select  建立菜单选项的另一种工具，它是从ksh引进的
 
 PS3＝"		"
-
 
 select var in  choice1 choice2 choice3 ...
 do
@@ -108,11 +73,7 @@ do
         break	--这里不加break的话，就会一直循环让你选择
 done
 
-
-
 =========================================================
-
-
 
 函数
 
@@ -121,20 +82,12 @@ function_name () {
 		command
 }
 
-
 function function_name () {
 		command
 		command
 }
 
-
-
 例六：模拟用函数写一个服务启动，关闭，重启的脚本 （要求有start,stop,restart,status,支持chkconfig等功能) --提示:使用随机数来做pid文件
-
-
-
-
-
 
 例七：分析一下尚观装视频播放的脚本	iso.cp
 
@@ -152,33 +105,11 @@ function function_name () {
 第三大步：
 判断OK后，调用上面的函数
 
-
-
-
-
-
-
-
-
-
 例八：read输入一个目录，找出目录下包括子目录下为死链接的文件。（要求不使用find，使用函数进行递归查找子目录里的文件)
-
-
-
-
-
-
-
-
-
-
-
-
 
 例九：结合函数和case菜单功能，写一下关于usb挂载的脚本，（要实现的功能有挂载，卸载，列出挂载后内容，usb拷贝文件到系统，系统拷贝文件到usb，退出等六个功能）
 
 #!/bin/bash
-
 mountusb () {
         fdisk -l
         read -p "选择你要挂载的设备(如:/dev/sdb1):" dev
@@ -249,14 +180,7 @@ esac
         read anwser
 done
 
-
-
 例十：用函数和case菜单写一个备份恢复的脚本 （实现备份目录，恢复目录，验证目录，退出等功能，要求用函数的嵌套）
-
-
-
-
-
 
 =================================================================
 
@@ -265,7 +189,6 @@ done
 数组的定义：
 
 [root@li shell03]# abc=( 1 2 a b "sfsda sf sfdsa" )	--定义一个数组，可以是数字，字母，或者字符串
-
 [root@li shell03]# echo ${abc[0]}	--第一个变量是0不是1
 1
 [root@li shell03]# echo ${abc[1]}
@@ -276,7 +199,6 @@ a
 b
 [root@li shell03]# echo ${abc[4]}
 sfsda sf sfdsa
-
 
 定义不连续的数组
 [root@li shell03]# a[5]="55555"
@@ -301,7 +223,6 @@ sfsda sf sfdsa
 [root@li shell03]# echo ${#a[*]}
 3
 
-
 [root@li shell03]# array3=(`ifconfig eth0|grep Mask`)
 [root@li shell03]# echo ${array3[0]}
 inet
@@ -312,13 +233,9 @@ Bcast:10.1.1.255
 [root@li shell03]# echo ${array3[3]}
 Mask:255.255.255.0
 
-
-
 例十一：使用数组功能保存用户的登录日志信息：	时间（要求精确到秒)   用户	 from
 
-
 #!/bin/bash
-
 time=`date +"%Y-%m-%d %H:%M:%S"`
 array1=( `ps |grep bash` )
 array2=( `who |grep ${array1[1]}` )
@@ -343,9 +260,6 @@ fi
 
 echo -e "$now\t\t${array2[0]}\t\t${array2[4]}" >> /tmp/loginrecord.txt
 
-
-
-
 ===========================================================
 
 题目：
@@ -355,25 +269,13 @@ echo -e "$now\t\t${array2[0]}\t\t${array2[4]}" >> /tmp/loginrecord.txt
 
 提示：需要计算输入的整数的长度，然后进行循环（参考例十的循环），截取整数中的单一字符(man cut)，对截取的单一字符使用case菜单分类，最后打印
 
-
-
-
-
-
-
 2.用read输入一个文件，然后把行数倒序输出（上下倒序)，保存到一个新文件
 
-
 --只用循环来做：
-
-
-
-
 
 --使用数组加循环来做:
 
 #!/bin/bash
-
 read -p "input a filename:" file
 
 lines=`cat $file | wc -l`
