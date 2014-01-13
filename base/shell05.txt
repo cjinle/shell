@@ -1,0 +1,450 @@
+--
+
+
+sed  流编辑器
+
+  sed  - stream editor for filtering and trans-
+       forming text
+
+
+删除
+
+head -n 5 /etc/passwd |cat -n |sed -e '2d'	--指定删除第二行
+
+head -n 5 /etc/passwd |cat -n |sed -e '2,3d'  --删除第二行到第三行，中间为逗号，表示范围
+
+head -n 5 /etc/passwd |cat -n |sed -e '1d;5d' --删除第一行和第五行，中间为分号，表示单独的操作
+
+head -n 5 /etc/passwd |cat -n |sed -e '1d;5d;3d'
+
+
+head -5 /etc/passwd |cat -n| sed '1d;3,5d'	
+
+
+
+删除
+
+head -n 5 /etc/passwd |cat -n |sed -e '2d'	--指定删除第二行
+
+head -n 5 /etc/passwd |cat -n |sed -e '2,3d'  --删除第二行到第三行，中间为逗号，表示范围
+
+head -n 5 /etc/passwd |cat -n |sed -e '1d;5d' --删除第一行和第五行，中间为分号，表示单独的操作
+
+head -n 5 /etc/passwd |cat -n |sed -e '1d;5d;3d'
+
+
+
+--利用正则表达式来匹配行
+head -n 5 /etc/passwd |cat -n |sed -e '/oo/d' --删除匹配oo的行
+
+head -n 5 /etc/passwd |sed -e '/^root/d' --删除以root开头的行
+
+head -n 5 /etc/passwd |sed -e '/bash$/d' --删除以bash结尾的行
+
+cat /etc/inittab |sed -e '/^$/d'	--删除空格行
+
+head -n 5 /etc/passwd |sed -e '/^[a-z]/d'
+
+head -n 5 /etc/passwd |sed -e '/^[a-z]/d' --删除小写字母开头的行，用[a-z]表示
+
+head -n 5 /etc/passwd |sed -e '/^[A-Z]/d'--删除大写字母开头的行，用[A-Z]表示
+
+head -n 5 /etc/passwd |sed -e '/^[a-Z]/d' --删除以字母开头的行，用[a-Z]表示，小写的a到大写的Z
+
+head -n 5 /etc/passwd |sed -e '/^[[:alpha:]]/d' --也是删除以字母开头的
+
+head -n 5 /etc/passwd |sed -e '/^[[:digit:]]/d' --删除以数字开头的
+
+head -n 5 /etc/passwd |sed -e '/^[[:upper:]]/d' --删除以大写字母开头的
+
+head -n 5 /etc/passwd |sed -e '/^[[:lower:]]/d'  --删除以小写字母开头的
+
+head -n 5 /etc/passwd |sed -e '/^[[:punct:]]/d' --删除以标点符号开头的
+
+head -n 5 /etc/passwd |sed -e '/^[[:blank:]]/d' --删除以空格开头的
+head -n 5 /etc/passwd |sed -e '/^ /d'	--同上
+head -n 5 /etc/passwd |sed -e '/^\ /d'	--同上
+
+cat /etc/inittab |sed -e '/^#/d;/^$/d' --删除/etc/inittab的空行和注释
+
+cat /etc/samba/smb.conf |sed '/#/d;/^$/d;/^;/d' --删除samba配置文件的注释和空行，注意有几个#号开头的注释不是顶格，所以#只匹配就行
+
+
+对源文件进行操作需要  -i 参数
+
+
+
+
+练习：sed -i 删除vsftpd.conf,smb.conf,sendmail.mc里所有的注释和空格
+
+# sed -i '/^#/d;/^$/d' /etc/vsftpd/vsftpd.conf 
+# sed -i '/#/d;/^$/d;/^;/d' /etc/samba/smb.conf 
+# sed -i '/^dnl /d' /etc/mail/sendmail.mc
+
+
+
+
+打印
+
+head -5 /etc/passwd |sed -e '/root/p'	--匹配root的行打印出来，但发现/etc/passwd的前五行也打印出来了
+
+head -5 /etc/passwd |sed -n -e '/root/p' --去除常规打印的信息，只打印匹配的行，要多加一个-n的参数，注意：-n不能加在-e之后，用-ne也可以，但用-en不行
+
+head -5 /etc/passwd |sed -ne '/^root/p' 
+
+head -5 /etc/passwd |sed -ne '/nologin$/p'
+
+cat /etc/inittab |sed -ne '/^$/p' 
+
+head  -5 /etc/passwd |sed -ne '1,4p'
+
+head  -5 /etc/passwd |sed -ne '1p;4p'
+
+head  -5 /etc/passwd |sed -ne '/^[[:upper:]]/p;/^[a-z]/p' --分别打印大写字母开头的行和小写字母开头的行
+
+head  -5 /etc/passwd |sed -ne '/^[[:upper:]]/,/^[a-z]/p' --用正则表达式实现范围打印
+
+head  -5 /etc/passwd |sed -ne '/^[[:upper:]]/,/nologin$/p'
+
+
+head -5 /etc/passwd |sed -n '/^[^[:blank:]]/p' --打印非空格开头的行
+
+
+
+=================================================================
+
+
+
+格式化输入所有ssh登录成功的信息
+
+[root@li shell04]# sed -n '/Accepted.*from/p' /var/log/secure | awk '{print "*********************************************************"} {print "time\t\thostname\tuser\tip\t\tport\tprotocol"} {print $1"-"$2" "$3"\t"$4"\t\t"$9"\t"$11"\t"$13"\t"$14} {print "*********************************************************"}'
+*********************************************************
+time            hostname        user    ip              port    protocol
+Jul-15 15:47:20 li              root    2.2.2.35        6703    ssh2
+*********************************************************
+*********************************************************
+time            hostname        user    ip              port    protocol
+Jul-15 15:47:27 li              root    2.2.2.35        6704    ssh2
+*********************************************************
+
+
+=================================================================
+
+
+替换
+
+head  -5 /etc/passwd |sed -e 's/root/sed/'
+head  -5 /etc/passwd |sed -e 's/:/@_@/' --把每一行的第一个匹配的字符替换
+
+head  -5 /etc/passwd |sed -e 's/:/@_@/g' --后面加一个g，代表全替换
+
+head  -5 /etc/passwd |sed -e 's/:/&@_@&/g' --&符号代表前面匹配的字符串
+
+head  -5 /etc/passwd |sed -e '2,4s/:/&@_@&/g' --指定替换2到4行
+
+ head  -5 /etc/passwd |sed -e '1,$s/:/&@_@&/g' --替换所有行，默认不加的话就是替换所有行
+
+head  -5 /etc/passwd |sed -e '/^root/,/^adm/s/:/&@_@&/g' --使用正则表达式来表示替换的行范围
+
+head  -5 /etc/passwd |sed -e '/^root/s/:/@_@/g;/^adm/s/:/@_@/g'  --替换以root开头的行和替换以adm开头的行
+
+
+
+练习：用脚本自动安装配置vsftp，把空行和注释都去掉，不允许匿名用户登录
+
+
+
+
+练习：自动搭建httpd服务，修改家目录为/www,修改默认语言为zh-CN，默认字符集为gb2312
+
+
+
+
+练习：写一个脚本自动安装下面的eyeOS（一个基于lamp的web操作系统)
+
+yum install httpd* -y
+yum install php* -y
+
+service httpd  restart
+
+/share/soft/lamp/php_source/eyeOS/eyeOS_1.8.6.2.tar.gz
+
+tar xvf /share/soft/lamp/php_source/eyeOS/eyeOS_1.8.6.2.tar.gz -C /share/www/    --解压到网站家目录
+
+
+
+安装访问的路径：
+http://10.1.1.35/eyeOS/index.php
+
+
+
+
+练习：写一个自动安装sendmail+dovecot服务器的脚本，要求监听所有，打开stmp验证，支持短域名
+
+
+
+
+
+练习：
+假如一台电脑开机后自动获取IP
+
+写一个脚本
+要求：
+1，假如获取的IP为2.2.2.X，把其以后都改为静态固定获取这个IP
+2，自动把它的主机名改为stationX.cluster.com(X代表获取IP的最后一个数),并加到/etc/hosts里，还要修改/etc/sysconfig/network里的全局主机名；
+3，修改ssh端口为2222，日志记录到local5设备，并记录到/var/log/ssh
+4,并配置/var/log/ssh每月1号0点轮转一次
+5,每月最后一天23点41分对成功登录的ssh信息打印成表的形式并保留成/tmp/ssh_success.txt文件，类似下面的表形式
+
+*********************************************************
+time            hostname        user    ip              port    protocol
+Jul-15 15:47:27 li              root    2.2.2.35        6704    ssh2
+*********************************************************
+
+
+
+#!/bin/bash
+
+
+ip=`ifconfig eth0 |grep Bcast|awk '{print $2}'|awk -F: '{print $2}'`
+iptail=`echo $ip |awk -F. '{print $NF}'`
+
+sed -i '/^BOOTPROTO/s/dhcp/static/' /etc/sysconfig/network-scripts/ifcfg-eth0
+echo "IPADDR=$ip" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+echo "NETMASK=255.255.255.0" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+
+
+hostname station"$iptail".cluster.com
+echo "$ip	station$iptail.cluster.com" >> /etc/hosts
+
+sed -i '/^HOSTNAME/d' /etc/sysconfig/network
+echo "HOSTNAME=station$iptail.cluster.com" >> /etc/sysconfig/network
+
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+
+使用组或者域进行打印的定位
+\(\)是将\( 和 \) 之间的字符串定义为组，并且将匹配这个表达式的保存到一个区域（一个正则表达式最多可以保存9个），它们使用\1到\9来表示
+
+或者使用扩展模式() 直接把括号内的字符串定义为组
+
+# echo "hi,Mr smith.welcome" |sed -e 's/\(.*\),\(.*\)\.\(.*\)/\3,\2,\1/'
+welcome,Mr smith,hi
+
+# echo "hi,Mr smith.welcome" |sed -r 's/(.*),(.*)\.(.*)/\3,\2,\1/'
+welcome,Mr smith,hi
+--使用-r参数使
+
+用扩展模式，在分域时可以去掉\符号，看上去比较简洁
+
+
+[root@li www]# head -1 /etc/passwd 
+root:x:0:0:root:/root:/bin/bash
+
+将/etc/passwd的第一行进行分域反转
+[root@li www]# head -1 /etc/passwd | sed -r 's/(.*):(.*):(.*):(.*):(.*):(.*):(.*)/\7:\6:\5:\4:\3:\2:\1/'
+/bin/bash:/root:root:0:0:x:root
+
+
+把/etc/passwd上下进行反转
+# cat -n /etc/passwd |sort -t" " -k 1 -n -r |sed -r 's/(.......)(.*)/\2/'
+
+
+
+把/etc/passwd上下反转，同时也左右进行反转
+
+# cat -n /etc/passwd |sort -t" " -k 1 -n -r |sed -r 's/(.......)(.*)/\2/' |sed -r 's/(.*):(.*):(.*):(.*):(.*):(.*):(.*)/\7:\6:\5:\4:\3:\2:\1/'
+
+
+删除每行的第一个字符
+
+
+删除每行的第二个字符
+
+
+删除每行的第九个字符
+
+
+删除倒数第5个字符
+
+
+把每行的第5个字符和第8个字符互换，并删除第10个字符
+
+
+
+删除/etc/passwd里的注释列(第五列)的内容
+
+
+sed -i -r 's/(.*):(.*):(.*):(.*):(.*):(.*):(.*)/\1:\2:\3:\4::\6\7/' /etc/passwd.bak 
+
+
+
+正则表达式补充：
+a+代表多个a
+[a-z]+代表多个小写字母
+[A-Z]+代表多个大写字母
+[a-Z]+代表多个字母
+
+
+删除每行的第一个单词
+
+
+删除每行的第二个单词
+
+
+删除每行的最后一个单词
+
+
+删除每行的倒数第二个单词
+
+
+
+=============================================================
+
+对apache的日志进行处理
+
+例1
+笔记目录下有一个access.log(httpd日志)日志文件
+处理前格式为:
+10.1.1.183 - - [02/Apr/2011:15:36:54 +0800] "GET /shell05/shell05.txt HTTP/1.1" 200 6305 "http://10.1.1.35/shell05/" "Mozilla/5.0 (X11; U; Linux i686; zh-CN; rv:1.9.0.12) Gecko/2009070811 Red Hat/3.0.12-1.el5_3 Firefox/3.0.12"
+
+
+处理后格式为:
+第一种：
+时间    	    	  访问ip         访问文件  
+2011-apr-02 15:36:54     10.1.1.183      shell05.txt
+
+
+
+
+
+
+第二种：
+时间		IP	 文件      从哪里点击过来
+2011-apr-02 15:36:54    10.1.1.183    /shell05/shell05.txt      http://10.1.1.35/shell05/
+
+
+
+
+
+
+例2：
+针对access2_log（squid日志)进行整理，要求整理后的格式为
+--注意此文件里的格式的第一列是表示的从1970-01-01的0点到现在的秒数
+--date +%s --date='2008-09-26 23:07:42'
+1222441662
+
+时间    	    	  访问ip         访问文件  
+2008-09-26 23:07:40 192.168.20.171 http://www.google.com/
+--提示:man awk查找strftime
+
+
+head access2_log |awk '$7 ~ "http" {print strftime ("%Y-%m-%d %H:%M:%S",$1),$3,$7}'
+
+
+
+
+==================================================================
+
+
+expect   自动应答		TCL语言
+
+
+yum install expect -y
+
+
+Summary     : A program-script interaction and testing utility
+Description :
+Expect is a tcl application for automating and testing
+interactive applications such as telnet, ftp, passwd, fsck,
+rlogin, tip, etc. Expect makes it easy for a script to
+control another program and interact with it.
+
+This package contains expect and some scripts that use it.
+
+
+
+例一：使用自动应答修改用户密码
+
+#!/bin/bash
+
+expect <<EOF > /dev/null 2>&1
+spawn passwd $1		--产生passwd $1这个命令
+expect "rd:"		--当停在rd:结尾这个标识符时
+send "456\r"		--我就把456传给它
+expect "rd:"		--当再次停在rd:结尾这个标识符时
+send "456\r"		--我就再次把456传给它
+expect eof		--表示expect结束
+EOF
+
+
+# sh 8.sh user2    --执行方法，因为脚本里写的是$1，所以后面接你要修改密码的用户名
+
+
+－－－－－－－－－－－－－－－－－－－－－
+
+#!/bin/bash
+
+
+sed -i "/^2.2.2.95/d" /root/.ssh/known_hosts
+expect << EOF > /dev/null 2>&1 
+spawn ssh 2.2.2.95
+expect "no)?"
+send "yes\r"
+expect "password:"
+send "123456\r"
+expect "]#"
+send "mkdir /root/Desktop/test\n"
+send "touch /root/Desktop/test/{1..10}\n"
+send "exit\n"
+expect eof
+EOF
+
+
+# sh 9.sh 	--执行方法
+
+
+
+-----------------------------
+
+#!/usr/bin/expect
+
+set host [lindex $argv 0]
+set user [lindex $argv 1]
+set passwd [lindex $argv 2]
+
+spawn ssh $user@$host
+expect "password:"
+send "$passwd\r"
+expect "]#"				--普通用户虽然提示符为]$，但这里这样写也可以
+send "touch /root/Desktop/abc\n"
+send "exit\n"
+
+
+# sh 10.sh 2.2.2.95 root 123456   --这样执行是错误的。因为sh命令就是直接调用bash去解释，不管你脚本开头定义的#!/usr/bin/expect
+
+# chmod 755 10.sh
+# ./10.sh 2.2.2.95 root 123456   --正确执行方法
+
+# expect 10.sh 2.2.2.95 root 123456  --或者直接指定由expect命令来执行
+
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+学习完shell后你应该可以写出下列几大类脚本:
+
+触发型脚本
+自动安装型
+监控警告型
+自动管理型
+日志处理型
+自动应答型
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+
+
+
+
+

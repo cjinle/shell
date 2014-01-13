@@ -1,0 +1,392 @@
+--
+
+
+菜单   case    select 
+
+
+从/etc/init.d/httpd里拷的一段
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  status)
+        status -p ${pidfile} $httpd
+        RETVAL=$?
+        ;;
+  restart)
+        stop
+        start
+        ;;
+ *)
+        echo $"Usage: $prog {start|stop|restart|condrestart|reload|status|fullstatus|graceful|help|configtest}"
+        exit 1
+esac
+
+
+
+case  "chioce" in
+	"var1" )
+		command
+	;;
+	"var2" )
+		command
+	;;
+	"var3"	)
+		command
+	;;
+	* )
+		command
+	exit 1
+esac
+
+
+例一：输入一个键，判断是大写字母还是小写字母，还是数字，还是其它
+
+
+
+
+
+
+
+
+例二:改写第一天的判断脚本
+使用read让用户输入它的名字，性别（对性别进行判断），年龄（判断是否有18岁成年)
+
+
+
+
+
+
+
+
+
+
+例三：交互输入一个人名，选择性别，或者姓名，显示相应的人的资料(把选择项写成菜单的形式)
+
+
+
+
+
+
+
+
+例四：改写上一个题目，在case里面再嵌套case菜单，使之选项更丰富
+
+
+
+
+
+
+
+------------------------------------------------------------------
+
+
+select  建立菜单选项的另一种工具，它是从ksh引进的
+
+PS3＝"		"
+
+
+select var in  choice1 choice2 choice3 ...
+do
+	echo "................."
+done
+
+	例五：用select做一个选择菜单
+
+PS3="please choose what operation system you are using:"	--PS3是select命令用来加入提示字符串的符号，（默认会使用#?)
+
+echo
+
+select os in  xp   vista   windows7 linux unix
+do
+        echo
+        echo "your operation system is $os"
+        echo
+        break	--这里不加break的话，就会一直循环让你选择
+done
+
+
+
+=========================================================
+
+
+
+函数
+
+function_name () {
+		command
+		command
+}
+
+
+function function_name () {
+		command
+		command
+}
+
+
+
+例六：模拟用函数写一个服务启动，关闭，重启的脚本 （要求有start,stop,restart,status,支持chkconfig等功能) --提示:使用随机数来做pid文件
+
+
+
+
+
+
+例七：分析一下尚观装视频播放的脚本	iso.cp
+
+第一大步：
+主要的过程就是定义了一个函数
+
+判断根分区的分区号
+判断根分区的空间大小
+从10.1.1.1的服务器上下载了三个文件到本地根分区的/isoroot目录
+把grub启动信息echo到/boot/grub.conf里
+
+第二大步：
+对安装者的输入的服务器地址，用户名，密码三项做了一个判断
+
+第三大步：
+判断OK后，调用上面的函数
+
+
+
+
+
+
+
+
+
+
+例八：read输入一个目录，找出目录下包括子目录下为死链接的文件。（要求不使用find，使用函数进行递归查找子目录里的文件)
+
+
+
+
+
+
+
+
+
+
+
+
+
+例九：结合函数和case菜单功能，写一下关于usb挂载的脚本，（要实现的功能有挂载，卸载，列出挂载后内容，usb拷贝文件到系统，系统拷贝文件到usb，退出等六个功能）
+
+#!/bin/bash
+
+mountusb () {
+        fdisk -l
+        read -p "选择你要挂载的设备(如:/dev/sdb1):" dev
+        mount $dev /mnt
+}
+
+umountusb () {
+        umount /mnt
+}
+
+display () {
+        ls -l /mnt
+}
+
+usbtosystem () {
+        display
+        read -p "选择你要拷贝的文件名(相对路径):" file1
+        read -p "选择你要拷贝到哪个目录(绝对路径):" dir1
+        echo "拷贝中，请耐心等待..."
+        cp -r /mnt/$file1 $dir1
+        echo "拷贝完成"
+}
+
+systemtousb () {
+        read -p "选择你要拷贝的文件名(相对路径):" file2
+        echo "拷贝中，请耐心等待..."
+        cp $file2 /mnt/ -rf
+        echo "拷贝完成"
+}
+
+quit () {
+        echo "谢谢使用，如有BUG，请联系xxx@gmail.com"
+}
+
+anwser=Y
+while [ $anwser = Y -o $anwser = y ]
+do
+echo "##################################"
+echo "    usb mount program by li       "
+echo "##################################"
+echo "                                  "
+echo "          1-挂载                  "
+echo "          2-卸载                  "
+echo "          3-列出内容              "
+echo "          4-拷文件到系统          "
+echo "          5-拷文件到usb           "
+echo "          0-退出程序              "
+echo "                                  "
+echo "##################################"
+echo -n "请选择(0-5): "
+read choice
+
+case "$choice" in 
+        1 ) clear && mountusb ;;
+        2 ) clear && umountusb ;;
+        3 ) clear && display ;;
+        4 ) clear && usbtosystem ;;
+        5 ) clear && systemtousb ;;
+        0 ) clear && quit ;;
+        * ) echo "选择有误，只能选择0-5!"
+            exit 1
+esac
+        if [ $? -ne 0 ];then
+        echo '程序出错!'
+        exit 3
+        fi
+        echo -e "你要继续循环运行吗?(输入Y或y继续，输入其它退出)"
+        read anwser
+done
+
+
+
+例十：用函数和case菜单写一个备份恢复的脚本 （实现备份目录，恢复目录，验证目录，退出等功能，要求用函数的嵌套）
+
+
+
+
+
+
+=================================================================
+
+数组
+
+数组的定义：
+
+[root@li shell03]# abc=( 1 2 a b "sfsda sf sfdsa" )	--定义一个数组，可以是数字，字母，或者字符串
+
+[root@li shell03]# echo ${abc[0]}	--第一个变量是0不是1
+1
+[root@li shell03]# echo ${abc[1]}
+2
+[root@li shell03]# echo ${abc[2]}
+a
+[root@li shell03]# echo ${abc[3]}
+b
+[root@li shell03]# echo ${abc[4]}
+sfsda sf sfdsa
+
+
+定义不连续的数组
+[root@li shell03]# a[5]="55555"
+[root@li shell03]# a[6]="66666666"
+[root@li shell03]# a[9]="999"
+[root@li shell03]# echo ${a[5]}
+55555
+[root@li shell03]# echo ${a[6]}
+66666666
+[root@li shell03]# echo ${a[9]}
+999
+
+--查看数组的全部值
+[root@li shell03]# echo ${abc[*]}
+1 2 a b sfsda sf sfdsa
+[root@li shell03]# echo ${abc[@]}
+1 2 a b sfsda sf sfdsa
+
+--查看数组的个数
+[root@li shell03]# echo ${#abc[*]}
+5
+[root@li shell03]# echo ${#a[*]}
+3
+
+
+[root@li shell03]# array3=(`ifconfig eth0|grep Mask`)
+[root@li shell03]# echo ${array3[0]}
+inet
+[root@li shell03]# echo ${array3[1]}
+addr:10.1.1.35
+[root@li shell03]# echo ${array3[2]}
+Bcast:10.1.1.255
+[root@li shell03]# echo ${array3[3]}
+Mask:255.255.255.0
+
+
+
+例十一：使用数组功能保存用户的登录日志信息：	时间（要求精确到秒)   用户	 from
+
+
+#!/bin/bash
+
+time=`date +"%Y-%m-%d %H:%M:%S"`
+array1=( `ps |grep bash` )
+array2=( `who |grep ${array1[1]}` )
+
+if [ "${array2[4]}" = "(:0.0)" ];then
+        echo "$time     ${array2[0]}    local" >> /tmp/login 
+else
+        echo "$time     ${array2[0]}    ${array2[4]}" >> /tmp/login 
+fi
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+#!/bin/bash
+
+now=`date +"%Y-%m-%d %H:%M:%S"`
+array1=( `ps |grep bash` ) 
+array2=( `who | grep ${array1[1]}` )
+
+if [ ${array2[4]} = "(:0.0)" ];then
+        array2[4]="本地登录"
+fi
+
+echo -e "$now\t\t${array2[0]}\t\t${array2[4]}" >> /tmp/loginrecord.txt
+
+
+
+
+===========================================================
+
+题目：
+
+1,使用read输入一个整数，把数字中的所有数字转换成英文单词
+	如:2345  转换为 two three four five
+
+提示：需要计算输入的整数的长度，然后进行循环（参考例十的循环），截取整数中的单一字符(man cut)，对截取的单一字符使用case菜单分类，最后打印
+
+
+
+
+
+
+
+2.用read输入一个文件，然后把行数倒序输出（上下倒序)，保存到一个新文件
+
+
+--只用循环来做：
+
+
+
+
+
+--使用数组加循环来做:
+
+#!/bin/bash
+
+read -p "input a filename:" file
+
+lines=`cat $file | wc -l`
+j=$lines
+
+while read line
+do
+        array1[$j]="$line"
+        let j--
+done < $file
+
+for (( i=1;i<=$lines;i++ ))
+do
+        echo ${array1[$i]}
+done
+

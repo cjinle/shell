@@ -1,0 +1,12 @@
+#!/usr/bin/expect
+
+set host [lindex $argv 0]
+set user [lindex $argv 1]
+set passwd [lindex $argv 2]
+
+spawn ssh $host -l $user
+expect "password:"
+send "$passwd\r"
+expect "]#"
+send "touch ~/expect\n"
+send "exit\n"
