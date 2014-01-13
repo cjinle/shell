@@ -1,7 +1,5 @@
 # shell scripts
 
-
-### 指引
 * [shell教程](./base)
 * [if](./base/if.sh)
 * [for](./base/for.sh) / [for2](./base/for2.sh)
@@ -14,7 +12,7 @@
 * [math](./base/math.sh)
 * [expect](./base/expect.sh) / [expect_file](./base/ssh.exp)
 
-### 文本说明
+### wiki 
 * [shell01](./base/shell01.txt)
 * [shell02](./base/shell02.txt)
 * [shell03](./base/shell03.txt)
