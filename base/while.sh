@@ -15,6 +15,10 @@ until [ $b -lt 5 ] ; do
     ((b--))
 done
 
+#while true ; do
+#    echo 123
+#    sleep 1
+#done
 
 ls * | while read i ; do
     echo $i
@@ -23,3 +27,4 @@ done
 #for i in `ls *` ; do
 #    echo $i
 #done
+
