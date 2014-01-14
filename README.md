@@ -2,6 +2,7 @@
 
 * [if](./base/if.sh)
 * [for](./base/for.sh) / [for2](./base/for2.sh)
+* [while](./base/while.sh) / [while2](./base/while2.sh) / [until](./base/while.sh)
 * [case](./base/case.sh) / [select](./base/select.sh)
 * [func](./base/func.sh)
 * [awk](./base/awk.sh) / [awk_file](./base/aa.awk)
