@@ -1,7 +1,7 @@
 #!/bin/bash
 
 a=10
-while [ $a -gt 5 ] ; do
+while [ $a -gt 5 ]; do
     echo $a
     ((a--))
     #let a--
@@ -10,7 +10,7 @@ done
 
 
 b=10
-until [ $b -lt 5 ] ; do
+until [ $b -lt 5 ]; do
     echo $b
     ((b--))
 done
@@ -20,11 +20,11 @@ done
 #    sleep 1
 #done
 
-ls * | while read i ; do
+ls * | while read i; do
     echo $i
 done
 
-#for i in `ls *` ; do
+#for i in `ls *`; do
 #    echo $i
 #done
 
